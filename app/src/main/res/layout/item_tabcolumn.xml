@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:padding="5dp">
+
+    <TextView
+        android:id="@+id/item_text"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clickable="true"
+        android:focusableInTouchMode="true"
+        android:focusable="true"
+        android:background="@drawable/radio_buttong_bg"
+        android:padding="5dp"
+        android:text="item"
+        android:textColor="@color/top_category_scroll_text_color_day"
+        style="@style/top_category_scroll_view_item_text" />
+
+</RelativeLayout>

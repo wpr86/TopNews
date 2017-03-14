@@ -3,6 +3,7 @@ package com.carl.co.topnews.fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,9 +19,9 @@ public class NewsFragment extends Fragment {
     private String type;
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         Bundle args = getArguments();
         type = args != null ? args.getString("type") : "";
-        super.onCreate(savedInstanceState);
     }
 
     @Nullable

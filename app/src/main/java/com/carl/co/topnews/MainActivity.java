@@ -2,8 +2,9 @@ package com.carl.co.topnews;
 
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -12,12 +13,8 @@ import android.view.MenuItem;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
-import com.carl.co.topnews.bean.NewsClassify;
 import com.carl.co.topnews.fragment.NewsMainFragment;
 import com.carl.co.topnews.fragment.OtherFragment;
-import com.carl.co.topnews.tools.Constants;
-
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -37,6 +34,11 @@ public class MainActivity extends AppCompatActivity {
 
     private ActionBarDrawerToggle mDrawerToggle;
 
+    private Fragment mNewsFragment = new NewsMainFragment();
+    private Fragment mOtherFragment2 = new OtherFragment();
+    private Fragment mOtherFragment3 = new OtherFragment();
+    private Fragment mOtherFragment4 = new OtherFragment();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         initView();
+        initFragments();
         switchToMain();
     }
 
@@ -57,6 +60,37 @@ public class MainActivity extends AppCompatActivity {
         mNavigationView.inflateHeaderView(R.layout.navigation_header);
     }
 
+    private void initFragments(){
+        FragmentManager mFragmentManager = getSupportFragmentManager();
+        FragmentTransaction mFragmentTransaction = mFragmentManager.beginTransaction();
+        mNewsFragment = new NewsMainFragment();
+
+        mOtherFragment2 = new OtherFragment();
+        Bundle data = new Bundle();
+        data.putString("type", "two");
+        mOtherFragment2.setArguments(data);
+
+        mOtherFragment3 = new OtherFragment();
+        data = new Bundle();
+        data.putString("type", "three");
+        mOtherFragment3.setArguments(data);
+
+        mOtherFragment4 = new OtherFragment();
+        data = new Bundle();
+        data.putString("type", "fore");
+        mOtherFragment4.setArguments(data);
+
+        mFragmentTransaction.add(R.id.frame_content, mNewsFragment, "mNewsFragment");
+        mFragmentTransaction.add(R.id.frame_content, mOtherFragment2, "mOtherFragment2");
+        mFragmentTransaction.add(R.id.frame_content, mOtherFragment3, "mOtherFragment3");
+        mFragmentTransaction.add(R.id.frame_content, mOtherFragment4, "mOtherFragment4");
+
+        mFragmentTransaction.hide(mNewsFragment);
+        mFragmentTransaction.hide(mOtherFragment2);
+        mFragmentTransaction.hide(mOtherFragment3);
+        mFragmentTransaction.hide(mOtherFragment4);
+        mFragmentTransaction.commit();
+    }
 
     private void setupDrawerContent(NavigationView navigationView) {
         navigationView.setNavigationItemSelectedListener(
@@ -85,27 +119,41 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void switchToMain(){
-        getSupportFragmentManager().beginTransaction().replace(R.id.frame_content, new NewsMainFragment()).commit();
+//        getSupportFragmentManager().beginTransaction().replace(R.id.frame_content, new NewsMainFragment()).commit();
+        FragmentManager mFragmentManager = getSupportFragmentManager();
+        FragmentTransaction mFragmentTransaction = mFragmentManager.beginTransaction();
+        mFragmentTransaction.show(mNewsFragment);
+        mFragmentTransaction.hide(mOtherFragment2);
+        mFragmentTransaction.hide(mOtherFragment3);
+        mFragmentTransaction.hide(mOtherFragment4);
+        mFragmentTransaction.commit();
     }
     private void switchToTwo(){
-        OtherFragment fragment = new OtherFragment();
-        Bundle data = new Bundle();
-        data.putString("type", "two");
-        fragment.setArguments(data);
-        getSupportFragmentManager().beginTransaction().replace(R.id.frame_content, fragment).commit();
+//        getSupportFragmentManager().beginTransaction().replace(R.id.frame_content, fragment).commit();
+        FragmentManager mFragmentManager = getSupportFragmentManager();
+        FragmentTransaction mFragmentTransaction = mFragmentManager.beginTransaction();
+        mFragmentTransaction.hide(mNewsFragment);
+        mFragmentTransaction.show(mOtherFragment2);
+        mFragmentTransaction.hide(mOtherFragment3);
+        mFragmentTransaction.hide(mOtherFragment4);
+        mFragmentTransaction.commit();
     }
     private void switchToThree(){
-        OtherFragment fragment = new OtherFragment();
-        Bundle data = new Bundle();
-        data.putString("type", "three");
-        fragment.setArguments(data);
-        getSupportFragmentManager().beginTransaction().replace(R.id.frame_content, fragment).commit();
+        FragmentManager mFragmentManager = getSupportFragmentManager();
+        FragmentTransaction mFragmentTransaction = mFragmentManager.beginTransaction();
+        mFragmentTransaction.hide(mNewsFragment);
+        mFragmentTransaction.hide(mOtherFragment2);
+        mFragmentTransaction.show(mOtherFragment3);
+        mFragmentTransaction.hide(mOtherFragment4);
+        mFragmentTransaction.commit();
     }
     private void switchToFore(){
-        OtherFragment fragment = new OtherFragment();
-        Bundle data = new Bundle();
-        data.putString("type", "fore");
-        fragment.setArguments(data);
-        getSupportFragmentManager().beginTransaction().replace(R.id.frame_content, fragment).commit();
+        FragmentManager mFragmentManager = getSupportFragmentManager();
+        FragmentTransaction mFragmentTransaction = mFragmentManager.beginTransaction();
+        mFragmentTransaction.hide(mNewsFragment);
+        mFragmentTransaction.hide(mOtherFragment2);
+        mFragmentTransaction.hide(mOtherFragment3);
+        mFragmentTransaction.show(mOtherFragment4);
+        mFragmentTransaction.commit();
     }
 }

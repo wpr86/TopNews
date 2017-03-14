@@ -1,50 +1,41 @@
 package com.carl.co.topnews;
 
 import android.os.Bundle;
+import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.ViewPager;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
-import android.widget.HorizontalScrollView;
-import android.widget.LinearLayout;
+import android.view.MenuItem;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 
-import com.carl.co.topnews.adapter.ItemRecyclerViewAdapter;
-import com.carl.co.topnews.adapter.NewsFragmentAdapter;
 import com.carl.co.topnews.bean.NewsClassify;
-import com.carl.co.topnews.fragment.NewsFragment;
+import com.carl.co.topnews.fragment.NewsMainFragment;
+import com.carl.co.topnews.fragment.OtherFragment;
 import com.carl.co.topnews.tools.Constants;
-import com.carl.co.topnews.tools.Tool;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MainActivity extends AppCompatActivity implements ViewPager.OnPageChangeListener {
+public class MainActivity extends AppCompatActivity {
+
     @BindView(R.id.toolbar_title)
     TextView toolbarTitle;
     @BindView(R.id.toolbar)
     Toolbar toolbar;
-    @BindView(R.id.mRadioGroup_content)
-    RecyclerView mRadioGroupContent;
-    @BindView(R.id.mColumnHorizontalScrollView)
-    HorizontalScrollView mnHorizontalScrollView;
-    @BindView(R.id.mViewPager)
-    ViewPager mViewPager;
-    @BindView(R.id.layout_main)
-    LinearLayout layoutMain;
+    @BindView(R.id.navigation_view)
+    NavigationView mNavigationView;
+    @BindView(R.id.drawer_layout)
+    DrawerLayout mDrawerLayout;
+    @BindView(R.id.frame_content)
+    FrameLayout frameContent;
 
-    private List<NewsClassify> newsClassifyList;
-    private List<String> newsTitleList;
-    // 当前选中栏目
-    private int columnSelectIndex = 0;
-
-    private int mScreenWitdh = 0;
+    private ActionBarDrawerToggle mDrawerToggle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,106 +44,68 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
-        mScreenWitdh = Tool.getWindowsWidth(this);
-        newsClassifyList = Constants.getData();
-
-        initFragment();
-        initTabColumn();
-
+        initView();
+        switchToMain();
     }
 
-    private void initFragment() {
-        NewsFragmentAdapter adapter = new NewsFragmentAdapter(getSupportFragmentManager());
-        newsTitleList = new ArrayList<>();
-        for (NewsClassify newsClassify : newsClassifyList) {
-            Fragment fragment = new NewsFragment();
-            Bundle data = new Bundle();
-            data.putString("title", newsClassify.getTitle());
-            data.putInt("id", newsClassify.getId());
-            data.putString("type", newsClassify.getType());
-            fragment.setArguments(data);
-            adapter.addFragment(fragment);
-            newsTitleList.add(newsClassify.getTitle());
-        }
-        mViewPager.setAdapter(adapter);
-        mViewPager.addOnPageChangeListener(this);
+    private void initView(){
+        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, toolbar, R.string.drawer_open,
+                R.string.drawer_close);
+        mDrawerToggle.syncState();
+        mDrawerLayout.addDrawerListener(mDrawerToggle);
+        setupDrawerContent(mNavigationView);
+        mNavigationView.inflateHeaderView(R.layout.navigation_header);
     }
 
-    /**
-     * 初始化Column栏目项
-     */
-    private void initTabColumn() {
-//        mRadioGroupContent.removeAllViews();
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-        mRadioGroupContent.setLayoutManager(layoutManager);
-        ItemRecyclerViewAdapter adapter = new ItemRecyclerViewAdapter(this,newsTitleList);
-        mRadioGroupContent.setAdapter(adapter);
 
-        adapter.setOnClickListener(new ItemRecyclerViewAdapter.OnItemClickListener() {
-            @Override
-            public void onClick(int position) {
-                mViewPager.setCurrentItem(position);
-            }
-        });
-
-        new Thread(){
-            @Override
-            public void run() {
-                super.run();
-                while(mRadioGroupContent.getChildCount()<=0){
-                    try {
-                        Thread.sleep(20);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-                runOnUiThread(new Runnable() {
+    private void setupDrawerContent(NavigationView navigationView) {
+        navigationView.setNavigationItemSelectedListener(
+                new NavigationView.OnNavigationItemSelectedListener() {
                     @Override
-                    public void run() {
-                        selectTab(columnSelectIndex);
+                    public boolean onNavigationItemSelected(MenuItem menuItem) {
+                        switch (menuItem.getItemId()) {
+                            case R.id.navigation_1:
+                                switchToMain();
+                                break;
+                            case R.id.navigation_2:
+                                switchToTwo();
+                                break;
+                            case R.id.navigation_3:
+                                switchToThree();
+                                break;
+                            case R.id.navigation_4:
+                                switchToFore();
+                                break;
+                        }
+                        menuItem.setChecked(true);
+                        mDrawerLayout.closeDrawers();
+                        return true;
                     }
                 });
-            }
-        }.start();
-
     }
 
-    @Override
-    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
+    private void switchToMain(){
+        getSupportFragmentManager().beginTransaction().replace(R.id.frame_content, new NewsMainFragment()).commit();
     }
-
-    @Override
-    public void onPageSelected(int position) {
-        mViewPager.setCurrentItem(position);
-        selectTab(position);
+    private void switchToTwo(){
+        OtherFragment fragment = new OtherFragment();
+        Bundle data = new Bundle();
+        data.putString("type", "two");
+        fragment.setArguments(data);
+        getSupportFragmentManager().beginTransaction().replace(R.id.frame_content, fragment).commit();
     }
-
-    @Override
-    public void onPageScrollStateChanged(int state) {
-
+    private void switchToThree(){
+        OtherFragment fragment = new OtherFragment();
+        Bundle data = new Bundle();
+        data.putString("type", "three");
+        fragment.setArguments(data);
+        getSupportFragmentManager().beginTransaction().replace(R.id.frame_content, fragment).commit();
     }
-
-    private void selectTab(int tab_postion) {
-        columnSelectIndex = tab_postion;
-        for (int i = 0; i < mRadioGroupContent.getChildCount(); i++) {
-            View checkView = mRadioGroupContent.getChildAt(tab_postion);
-            int k = checkView.getMeasuredWidth();
-            int l = checkView.getLeft();
-            int i2 = l + k / 2 - mScreenWitdh / 2;
-            mnHorizontalScrollView.smoothScrollTo(i2, 0);
-        }
-        //判断是否选中
-        for (int j = 0; j <  mRadioGroupContent.getChildCount(); j++) {
-            View checkView = mRadioGroupContent.getChildAt(j);
-            boolean ischeck;
-            if (j == tab_postion) {
-                ischeck = true;
-            } else {
-                ischeck = false;
-            }
-            checkView.setSelected(ischeck);
-        }
+    private void switchToFore(){
+        OtherFragment fragment = new OtherFragment();
+        Bundle data = new Bundle();
+        data.putString("type", "fore");
+        fragment.setArguments(data);
+        getSupportFragmentManager().beginTransaction().replace(R.id.frame_content, fragment).commit();
     }
 }

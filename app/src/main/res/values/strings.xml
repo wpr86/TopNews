@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">头条新闻</string>
+    <string name="navigation_1">主页</string>
+    <string name="navigation_2">菜单2</string>
+    <string name="navigation_3">菜单3</string>
+    <string name="navigation_4">菜单4</string>
+
+    <string name="drawer_open">Open</string>
+    <string name="drawer_close">Close</string>
 </resources>

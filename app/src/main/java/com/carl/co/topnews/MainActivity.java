@@ -1,5 +1,6 @@
 package com.carl.co.topnews;
 
+import android.graphics.PixelFormat;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -42,6 +43,10 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        try {
+            getWindow().setFormat(PixelFormat.TRANSPARENT);  // 防止添加surfaceView 时闪下黑屏的问题
+        } catch (Exception e) {
+        }
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);

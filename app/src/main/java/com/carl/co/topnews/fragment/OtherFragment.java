@@ -26,8 +26,8 @@ public class OtherFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_news,container,false);
-        TextView textView = (TextView)view.findViewById(R.id.fragmentText);
+        View view = inflater.inflate(R.layout.fragment_other,container,false);
+        TextView textView = (TextView)view.findViewById(R.id.fragment_other_text);
         textView.setText(type);
         return view;
     }

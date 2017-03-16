@@ -62,6 +62,17 @@ public class Constants {
 		classify.setType("gossip");
 		classify.setTitle("八卦");
 		newsClassify.add(classify);
+		classify = new NewsClassify();
 		return newsClassify;
 	}
+
+	/**
+	 * 门户页面场景标识
+	 */
+	public static final int NEWS_PROTAL_SCENE = 7001;
+
+	/**
+	 * 门户页面子场景标识
+	 */
+	public static final int NEWS_PROTAL_SUBSCENE = 1;
 }
